@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Database</title>
+	<meta charset="utf-8">
+</head>
+<body>
+	<style>
+		
+	  body {background-color: white;}
+	  
+		html {
+		  font-family: sans-serif;
+		}
+		
+
+		
+		.column {
+		  float: left;
+		  width: 50%;
+		  padding: 10px;
+		  height: 300px; 
+		}
+
+		.row:after {
+		  content: "";
+		  display: table;
+		  clear: both;
+		}
+		#delete{
+		  float: left;
+		  width: 50%;
+		  padding: 10px;
+		  height: 300px; 
+		}
+		
+
+	</style>
+
+
+	<div class="row">
+ 
+	</div>
+  		  <div class="column">
+
+
+  			<h1>Book an Event</h1>
+			<h2>Please fill out the form below to book your event.</h2>
+			
+  			
+				
+
+	<div class="reserve-form">
+		    <form>
+				<div class="form-header">
+					<p>Book Event</p>
+				</div>
+		        <div class="form-group">
+					<label>Event Name</label>
+		        	<input type="text" id="event_name" class="form-control" name="event_name" required="required">
+		        </div>
+				<div class="form-group">
+					<label>Supplier:</label>
+		            <input type="text" id="supplier" class="form-control" name="supplier" required="required">
+		        </div>
+		        <div class="form-group">
+					<label>Date: YYYY-MM-DD</label>
+		            <input type="text" id="date" class="form-control" name="date" required="required">
+		        </div>        
+				<div class="form-group">
+					<label>Start Time:</label>
+		        	<input type="text" id="e_start_time" class="form-control" name="e_start_time" required="required">
+		        </div>
+		        <div class="form-group">
+					<label>End Time:</label>
+		        	<input type="text" id="e_end_time" class="form-control" name="e_end_time" required="required">
+		        </div>
+		        <div class="form-group">
+					<label>Building Name:</label>
+		        	<input type="text" id="building_name" class="form-control" name="building_name" required="required">
+		        </div>	
+		        <div class="form-group">
+					<label>Club Name: </label>
+		        	<input type="text" id="club_name" class="form-control" name="club_name" required="required">
+		        </div>	
+		        <div class="form-group">
+					<label>Room Number:</label>
+		        	<input type="text" id="room_no" class="form-control" name="room_no" required="required">
+		        </div>
+		        <div class="form-group">
+					<label>President ID</label>
+		        	<input type="text" id="presID" class="form-control" name="presID" required="required">
+		        </div>
+		        <div class="form-group">
+					<label>Faculty ID</label>
+		        	<input type="text" id="fac_id" class="form-control" name="fac_id" required="required">
+		        </div>
+		      <div class="form-group">
+					<button type="button" onclick="bookEvent()" class="btn btn-primary btn-block btn-lg">Submit Reservation</button>
+				</div>
+		     
+		    </form>
+		</div>
+
+
+	
+
+
+		 	<table id="table2">
+					<thead>
+				    	<tr>
+				        	<th>message</th>
+				        </tr>
+				    </thead>
+				    	<tbody>
+				        </tbody>
+				</table>
+
+		 <ol id="list" style="list-style-type:none;">
+		</ol>
+			</div>
+			
+ 
+ 					  <div align="center">
+					  <h3 >Delete Existing Event:</h3>
+					  <p>Enter event name below.</p>
+					  </div>
+					  <form onsubmit="deleteEvent()" style="float: right">
+					  			
+					  			Event Name:<br>
+					  			<input type="text" id="delete_event_name" name="event_name"><br>
+								<input type="submit" value="Submit">
+
+					 </form> 
+		 	
+		</div>
+		
+		<!--<button type="button" onclick="sampleQuery()">Run Query</button>  -->
+	
+			<!--	<table id="queryTable" display="hide">
+				<CAPTION ALIGN="top">Find number of club members attending each event.</CAPTION>
+					<thead>
+				    	<tr>
+				        	<th>event_name</th><th>supplier</th><th>room_no</th>
+				        </tr>
+				    </thead>
+				    	<tbody>
+				        </tbody>
+				</table>
+				
+				
+			-->
+
+		
+
+				
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+
+
+		<script>
+
+		function bookEvent() {
+
+		var obj = {}
+		obj.event_name=document.getElementById('event_name').value
+		obj.supplier=document.getElementById('supplier').value
+		obj.e_start_time=document.getElementById('e_start_time').value
+		obj.e_end_time=document.getElementById('e_end_time').value
+		obj.date=document.getElementById('date').value
+		obj.club_name=document.getElementById('club_name').value
+		obj.building_name=document.getElementById('building_name').value
+		obj.room_no=document.getElementById('room_no').value
+		obj.presID=document.getElementById('presID').value
+		obj.fac_id=document.getElementById('fac_id').value
+		var responseStuff;
+		$.ajax({
+	            type: 'POST',
+	            url: 'http://localhost/eventBook',
+	            data: JSON.stringify(obj),
+	            contentType: "application/json"
+	        })
+	        .done(function(data) {
+	        	document.getElementById("table2").style.display="block";
+	        	$("#table2 tbody tr").remove();
+	        	var tbody = $('#table2 tbody'),
+			    props = ["message"];
+			$.each(data, function(i, data) {
+			  var tr = $('<tr>');
+			  $.each(props, function(i, prop) {
+			    $('<td>').html(data[prop]).appendTo(tr);  
+			  });
+			  tbody.append(tr);	  	           
+	        });
+	       	console.log(JSON.stringify(data));
+	       	responseStuff = JSON.stringify(data); 	
+
+	        })
+	        .fail(function(data) {
+	        	console.log(JSON.stringify(data));	
+	            //console.log(data);
+	            responseStuff = JSON.stringify(data); 	
+
+	        });	 
+	        alert("Request processing");
+
+		}
+	
+		</script>
+
+		<script>
+
+		function deleteEvent() {
+
+		var obj = {}
+		obj.event_name=document.getElementById('delete_event_name').value
+
+		$.ajax({
+	            type: 'POST',
+	            url: 'http://localhost/deleteEvent',
+	            data: JSON.stringify(obj),
+	            contentType: "application/json"
+	        })
+	        .done(function(data) {
+	        	/*$("#table2 tbody tr").remove();
+	        	var tbody = $('#table2 tbody'),
+			    props = ["message"];
+			$.each(data, function(i, data) {
+			  var tr = $('<tr>');
+			  $.each(props, function(i, prop) {
+			    $('<td>').html(data[prop]).appendTo(tr);  
+			  });
+			  tbody.append(tr);	  	           
+	        });*/
+	        alert("Event deleted");
+	       	console.log(JSON.stringify(data));
+	       	responseStuff = JSON.stringify(data); 	
+
+	        })
+	        .fail(function(data) {
+	        	console.log(JSON.stringify(data));	
+	     	    alert("Event deleted");
+
+
+	        });	 
+	        alert("Event deleted");
+	      
+
+		}
+	
+		</script>
+
+
+
+	
+</body>
+</html>
